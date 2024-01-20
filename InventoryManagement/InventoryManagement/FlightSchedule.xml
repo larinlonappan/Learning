@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Schedules>
+	<Schedule1>
+		<Departure CityCode="YUL" CityName="Montreal airport">Value</Departure>
+		<Arrival CityCode="YYZ" CityName="Toronto">Value</Arrival>
+	</Schedule1>
+	<Schedule2>
+		<Departure CityCode="YUL" CityName="Montreal">Value</Departure>
+		<Arrival CityCode="YYC" CityName="Calgary">Value</Arrival>
+	</Schedule2>
+	<Schedule3>
+		<Departure CityCode="YUL" CityName="Montreal">Value</Departure>
+		<Arrival CityCode="YVR" CityName="Vancouver">Value</Arrival>
+	</Schedule3>
+</Schedules>
