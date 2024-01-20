@@ -24,8 +24,9 @@ namespace InventoryManagement.Modules.Schedule
         /// <returns></returns>
         public ManagementTypeDTO GetManagementTypeDetails(int days, ManagementTypeDTO managementTypeDTO, IFileReaderFactory FileReaderFactory)
         {
-
-            List<ScheduleDTO> scheduleDTOlist = new List<ScheduleDTO>();
+            try
+            {
+                List<ScheduleDTO> scheduleDTOlist = new List<ScheduleDTO>();
             IFileReader readJsonFile = FileReaderFactory.CreateInstanceFileType(FileType.XML);
             XmlNodeList xnlNodes =(XmlNodeList) readJsonFile.GetFileDetails();
             int flightNumber = 0;
@@ -52,9 +53,11 @@ namespace InventoryManagement.Modules.Schedule
             }
             managementTypeDTO.ScheduleDTOlist = scheduleDTOlist;
             return managementTypeDTO;
-
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
-
-        
     }
 }

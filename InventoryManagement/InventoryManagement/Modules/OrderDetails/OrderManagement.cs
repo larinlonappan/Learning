@@ -27,58 +27,64 @@ namespace InventoryManagement.Modules.Order
         /// <returns></returns>
         public ManagementTypeDTO GetManagementTypeDetails(int sheduledDays, ManagementTypeDTO managementTypeDTO, IFileReaderFactory FileReaderFactory)
         {
-
-            IFileReader readJsonFile = FileReaderFactory.CreateInstanceFileType(FileType.Json);
-            IList<OrderAssignment> orderAssignmentList=(IList<OrderAssignment>)  readJsonFile.GetFileDetails();
-            IList <OrderAssignment> temporderAssignmentList= orderAssignmentList.ToList();
-            List<OrderDTO> orderDTOlist = new List<OrderDTO>();
-            temporderAssignmentList = orderAssignmentList;
-            int dayCount = 1;
-            int dailyTotalParcel = 0;
-            var flightSyncdaycount = managementTypeDTO.ScheduleDTOlist.Where(t => t.Day == dayCount).Select(t => t).ToList();
-            for (int i = 0; sheduledDays > i;i++)
+            try
             {
-                 flightSyncdaycount = managementTypeDTO.ScheduleDTOlist.Where(t => t.Day == dayCount).Select(t => t).ToList();
-                dailyTotalParcel = 0;
-                foreach (ScheduleDTO sheduleDTO in  flightSyncdaycount)
+                IFileReader readJsonFile = FileReaderFactory.CreateInstanceFileType(FileType.Json);
+                IList<OrderAssignment> orderAssignmentList = (IList<OrderAssignment>)readJsonFile.GetFileDetails();
+                IList<OrderAssignment> temporderAssignmentList = orderAssignmentList.ToList();
+                List<OrderDTO> orderDTOlist = new List<OrderDTO>();
+                temporderAssignmentList = orderAssignmentList;
+                int dayCount = 1;
+                int dailyTotalParcel = 0;
+                var flightSyncdaycount = managementTypeDTO.ScheduleDTOlist.Where(t => t.Day == dayCount).Select(t => t).ToList();
+                for (int i = 0; sheduledDays > i; i++)
                 {
-                   
-                    if (temporderAssignmentList.Count >= 20 )
+                    flightSyncdaycount = managementTypeDTO.ScheduleDTOlist.Where(t => t.Day == dayCount).Select(t => t).ToList();
+                    dailyTotalParcel = 0;
+                    foreach (ScheduleDTO sheduleDTO in flightSyncdaycount)
                     {
-                       
-                        var tmpAssignmentListlist = temporderAssignmentList.OrderBy(t => t.OrderName).ToList().Take(20);
-                       
-                        
-                        foreach (var tmpDatalist in tmpAssignmentListlist)
-                        {
-                            dailyTotalParcel++;
-                            FillOrderDTOList(orderDTOlist, sheduleDTO, tmpDatalist);
 
-                        }
-                        temporderAssignmentList = temporderAssignmentList.OrderBy(t => t.OrderName).ToList().Skip(20).ToList();
-                    }
-                    else if(temporderAssignmentList.Any())
-                    {
-                        foreach (var tmp in temporderAssignmentList)
+                        if (temporderAssignmentList.Count >= 20)
                         {
-                            dailyTotalParcel++;
-                           FillOrderDTOList(orderDTOlist, sheduleDTO, tmp);
+
+                            var tmpAssignmentListlist = temporderAssignmentList.OrderBy(t => t.OrderName).ToList().Take(20);
+
+
+                            foreach (var tmpDatalist in tmpAssignmentListlist)
+                            {
+                                dailyTotalParcel++;
+                                FillOrderDTOList(orderDTOlist, sheduleDTO, tmpDatalist);
+
+                            }
+                            temporderAssignmentList = temporderAssignmentList.OrderBy(t => t.OrderName).ToList().Skip(20).ToList();
                         }
-                        temporderAssignmentList = temporderAssignmentList.OrderBy(t => t.OrderName).ToList().Skip(temporderAssignmentList.Count).ToList();
-                    }
-                    else
-                    {
-                        FillOrderDTOList(orderDTOlist, sheduleDTO, null);
-                    }
-                    if ((flightSyncdaycount.Count * (ManagementConstants.AllowedDailyParcel)) == dailyTotalParcel)
-                    {
-                        dayCount++;
-                        break;
+                        else if (temporderAssignmentList.Any())
+                        {
+                            foreach (var tmp in temporderAssignmentList)
+                            {
+                                dailyTotalParcel++;
+                                FillOrderDTOList(orderDTOlist, sheduleDTO, tmp);
+                            }
+                            temporderAssignmentList = temporderAssignmentList.OrderBy(t => t.OrderName).ToList().Skip(temporderAssignmentList.Count).ToList();
+                        }
+                        else
+                        {
+                            FillOrderDTOList(orderDTOlist, sheduleDTO, null);
+                        }
+                        if ((flightSyncdaycount.Count * (ManagementConstants.AllowedDailyParcel)) == dailyTotalParcel)
+                        {
+                            dayCount++;
+                            break;
+                        }
                     }
                 }
+                managementTypeDTO.OrderDTOList = orderDTOlist;
+                return managementTypeDTO;
             }
-            managementTypeDTO.OrderDTOList = orderDTOlist;
-            return managementTypeDTO;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
         }
 

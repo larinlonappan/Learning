@@ -20,13 +20,18 @@ namespace InventoryManagement.Modules.Schedule
        /// <returns></returns>
         public object GetFileDetails()
         {
-            
+            try
+            {
                 XmlDocument xdc = new XmlDocument();
                 string path = Directory.GetCurrentDirectory() + "//FlightSchedule.xml";
                 xdc.Load(path);
                 XmlNodeList xnlNodes = xdc.SelectNodes("Schedules");
                 return xnlNodes;
-            
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }            
         }
     }
 }

@@ -52,7 +52,9 @@ namespace InventoryManagement.Modules.Order
         /// <returns></returns>
         public object GetFileDetails()
         {
-            string jsonTextFromFile = File.ReadAllText(Directory.GetCurrentDirectory() + "//coding-assigment-orders.json");
+            try
+            {
+                string jsonTextFromFile = File.ReadAllText(Directory.GetCurrentDirectory() + "//coding-assigment-orders.json");
             //Serilization is need when we send the data through network.Hence we Deserialize the json data. 
             var parametrosObject = JsonConvert.DeserializeObject<object>(jsonTextFromFile);
            IList<OrderAssignment> orderAssignmentList = new List<OrderAssignment>();
@@ -65,6 +67,11 @@ namespace InventoryManagement.Modules.Order
                 orderAssignmentList.Add(orderAssignment);
             }
             return orderAssignmentList;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         
